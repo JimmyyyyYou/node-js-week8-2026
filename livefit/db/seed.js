@@ -21,14 +21,69 @@ async function main() {
 
   // ======================================================================
   // TODO：依照任務內容的規格寫入資料
+  const skillRepo = dataSource.getRepository('Skill');
+  const userRepo = dataSource.getRepository('User');
+  const courseRepo = dataSource.getRepository('Course');
   //   1. SKILL 三筆：重訓、瑜珈、飛輪
+  // Create --> save
+  
+  const skill1 = await skillRepo.save({ name:'重訓' });
+  const skill2 = await skillRepo.save({ name:'瑜珈' });
+  const skill3 = await skillRepo.save({ name:'飛輪' });
+  
   //   2. USER 兩位教練，role 都為 'COACH'：
   //      海格教練（coach1@livefit.tw）、小美教練（coach2@livefit.tw）
+  const user1 = await userRepo.save({
+  name: '海格教練',
+  email: 'coach1@livefit.tw',
+  role: 'COACH',
+  });
+  const user2 = await userRepo.save({
+  name: '小美教練',
+  email: 'coach2@livefit.tw',
+  role: 'COACH',
+  });
   //   3. COURSE 四堂課：肌力入門班、週末飛輪、晨間瑜珈、核心特訓
   //      每堂課記得接上教練跟技能
   //      關聯的接法：user / skill 直接放前面存好的教練、技能物件
   //     （TypeORM 會自動取出它的 id 填進外鍵），寫法範例：
   //      courseRepo.save({ name: '...', user: 教練物件, skill: 技能物件 })
+  await courseRepo.save({
+    name: '肌力入門班',
+    description: "適合初學者的肌力訓練課程",
+    start_at: "2026-08-01 09:00",
+    end_at: "2026-08-01 10:30",
+    max_participants: 20,
+    user: user1,
+    skill: skill1,
+  });
+  await courseRepo.save({
+    name: '週末飛輪',
+    description: "週末高強度飛輪有氧",
+    start_at: "2026-08-02 14:00",
+    end_at: "2026-08-02 15:00",
+    max_participants: 15,
+    user: user2,
+    skill: skill3,
+  });
+  await courseRepo.save({
+    name: '晨間瑜珈',
+    description: "早晨伸展放鬆瑜珈課",
+    start_at: "2026-08-03 07:00",
+    end_at: "2026-08-03 08:00",
+    max_participants: 25,
+    user: user2,
+    skill: skill2,
+  });
+  await courseRepo.save({
+    name: '核心特訓',
+    description: "核心肌群強化訓練",
+    start_at: "2026-08-04 18:00",
+    end_at: "2026-08-04 19:30",
+    max_participants: 12,
+    user: user1,
+    skill: skill1,
+  });
   // ======================================================================
 
   console.log('🌱 seed 完成')
